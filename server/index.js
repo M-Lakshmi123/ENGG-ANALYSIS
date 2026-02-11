@@ -70,10 +70,13 @@ const buildWhereClause = (req, options = {}) => {
     };
 
     if (!options.ignoreCampus) addClause('CAMPUS_NAME', campus);
-    if (!options.ignoreStream) addClause('Stream', stream);
+    // Engineering: Stream is Batch
+    if (!options.ignoreStream) addClause('Batch', stream);
     if (!options.ignoreTest) addClause('Test', test);
-    if (!options.ignoreTestType) addClause('Test_Type', testType);
-    if (!options.ignoreTopAll) addClause('Top_ALL', topAll);
+    // Engineering: testType might be translated to Year
+    if (!options.ignoreTestType) addClause('Year', testType);
+    // Engineering: topAll is Top_AIR
+    if (!options.ignoreTopAll) addClause('Top_AIR', topAll);
 
     // If specific student IDs are selected, use them exclusively
     const sSearch = Array.isArray(studentSearch) ? studentSearch : (studentSearch ? [studentSearch] : []);
@@ -116,20 +119,20 @@ app.get('/api/filters', async (req, res) => {
         };
 
         const campusClause = buildOptionClause('CAMPUS_NAME', campus);
-        const streamClause = buildOptionClause('Stream', stream);
-        const testTypeClause = buildOptionClause('Test_Type', testType);
+        const streamClause = buildOptionClause('Batch', stream);
+        const testTypeClause = buildOptionClause('Year', testType);
         const testClause = buildOptionClause('Test', test);
 
         const campusesQuery = 'SELECT DISTINCT TRIM(CAMPUS_NAME) as CAMPUS_NAME FROM ENGG_RESULT WHERE CAMPUS_NAME IS NOT NULL AND CAMPUS_NAME != \'\' ORDER BY CAMPUS_NAME';
 
         const sWhere = campusClause ? `WHERE ${campusClause}` : 'WHERE 1=1';
-        const streamsQuery = `SELECT DISTINCT TRIM(Stream) as Stream FROM ENGG_RESULT ${sWhere} AND Stream IS NOT NULL AND Stream != '' ORDER BY Stream`;
+        const streamsQuery = `SELECT DISTINCT TRIM(Batch) as Stream FROM ENGG_RESULT ${sWhere} AND Batch IS NOT NULL AND Batch != '' ORDER BY Batch`;
 
         let ttClauses = [];
         if (campusClause) ttClauses.push(campusClause);
         if (streamClause) ttClauses.push(streamClause);
         const ttWhere = ttClauses.length > 0 ? `WHERE ${ttClauses.join(' AND ')}` : 'WHERE 1=1';
-        const testTypesQuery = `SELECT DISTINCT TRIM(Test_Type) as Test_Type FROM ENGG_RESULT ${ttWhere} AND Test_Type IS NOT NULL AND Test_Type != '' ORDER BY Test_Type`;
+        const testTypesQuery = `SELECT DISTINCT TRIM(Year) as Test_Type FROM ENGG_RESULT ${ttWhere} AND Year IS NOT NULL AND Year != '' ORDER BY Year`;
 
         let tClauses = [...ttClauses];
         if (testTypeClause) tClauses.push(testTypeClause);
@@ -139,7 +142,7 @@ app.get('/api/filters', async (req, res) => {
         let topClauses = [...tClauses];
         if (testClause) topClauses.push(testClause);
         const topWhere = topClauses.length > 0 ? `WHERE ${topClauses.join(' AND ')}` : 'WHERE 1=1';
-        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Top_ALL FROM ENGG_RESULT ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Top_ALL`;
+        const topQuery = `SELECT DISTINCT TRIM(Top_AIR) as Top_ALL FROM ENGG_RESULT ${topWhere} AND Top_AIR IS NOT NULL AND Top_AIR != '' ORDER BY Top_AIR`;
 
         const cacheKey = `filters_${JSON.stringify(req.query)}`;
         const cachedData = cache.get(cacheKey);
