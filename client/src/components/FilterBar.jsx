@@ -419,19 +419,19 @@ const FilterBar = ({ filters, setFilters, restrictedCampus, apiEndpoints = {} })
                     />
                 </div>
 
-                {/* Test Type Select (Engineering calls it Year) */}
+                {/* Test Type Select (Engineering calls it P1/P2) */}
                 <div className={`filter-group ${loadingFilters || filters.stream.length === 0 ? 'disabled-logic' : ''}`}>
-                    <label>Year</label>
+                    <label>P1/P2</label>
                     <Select
                         isMulti
                         name="testType"
-                        options={withSelectAll(options.testTypes, "Years")}
+                        options={withSelectAll(options.testTypes, "P1/P2")}
                         value={getValue('testType')}
                         onChange={(opts, meta) => handleSelectChange('testType', opts, meta)}
                         className="react-select-container"
                         isLoading={loadingFilters}
                         classNamePrefix="react-select"
-                        placeholder="Select Year..."
+                        placeholder="Select P1/P2..."
                         styles={customStyles}
                         isDisabled={loadingFilters || filters.stream.length === 0}
                     />
