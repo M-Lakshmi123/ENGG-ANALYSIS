@@ -389,19 +389,22 @@ app.get('/api/exam-stats', async (req, res) => {
                 Test, 
                 COUNT(STUD_ID) as Attn,
                 MAX(CAST(Total AS FLOAT)) as Max_T,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 280 THEN 1 ELSE 0 END) as T_280,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 260 THEN 1 ELSE 0 END) as T_260,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 240 THEN 1 ELSE 0 END) as T_240,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 220 THEN 1 ELSE 0 END) as T_220,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 200 THEN 1 ELSE 0 END) as T_200,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 180 THEN 1 ELSE 0 END) as T_180,
-                SUM(CASE WHEN CAST(Total AS FLOAT) > 150 THEN 1 ELSE 0 END) as T_150,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 250 THEN 1 ELSE 0 END) as T_250,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 200 THEN 1 ELSE 0 END) as T_200,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 180 THEN 1 ELSE 0 END) as T_180,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 150 THEN 1 ELSE 0 END) as T_150,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 120 THEN 1 ELSE 0 END) as T_120,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 100 THEN 1 ELSE 0 END) as T_100,
+                SUM(CASE WHEN CAST(Total AS FLOAT) >= 80 THEN 1 ELSE 0 END) as T_80,
                 MAX(CAST(MAT AS FLOAT)) as Max_M,
-                SUM(CASE WHEN CAST(MAT AS FLOAT) > 80 THEN 1 ELSE 0 END) as M_80,
+                SUM(CASE WHEN CAST(MAT AS FLOAT) >= 80 THEN 1 ELSE 0 END) as M_80,
+                SUM(CASE WHEN CAST(MAT AS FLOAT) >= 70 THEN 1 ELSE 0 END) as M_70,
                 MAX(CAST(PHY AS FLOAT)) as Max_P,
-                SUM(CASE WHEN CAST(PHY AS FLOAT) > 80 THEN 1 ELSE 0 END) as P_80,
+                SUM(CASE WHEN CAST(PHY AS FLOAT) >= 80 THEN 1 ELSE 0 END) as P_80,
+                SUM(CASE WHEN CAST(PHY AS FLOAT) >= 70 THEN 1 ELSE 0 END) as P_70,
                 MAX(CAST(CHE AS FLOAT)) as Max_C,
-                SUM(CASE WHEN CAST(CHE AS FLOAT) > 80 THEN 1 ELSE 0 END) as C_80
+                SUM(CASE WHEN CAST(CHE AS FLOAT) >= 80 THEN 1 ELSE 0 END) as C_80,
+                SUM(CASE WHEN CAST(CHE AS FLOAT) >= 70 THEN 1 ELSE 0 END) as C_70
             FROM ENGG_RESULT
             ${where}
             GROUP BY Test, DATE

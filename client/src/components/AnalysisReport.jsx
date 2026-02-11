@@ -99,19 +99,22 @@ const AnalysisReport = ({ filters }) => {
         return {
             Attn: studentMarks.length,
             Max_T: Math.max(...examStats.map(s => Number(s.Max_T) || 0)),
-            T_280: countIf(s => Number(s.tot) > 280),
-            T_260: countIf(s => Number(s.tot) > 260),
-            T_240: countIf(s => Number(s.tot) > 240),
-            T_220: countIf(s => Number(s.tot) > 220),
-            T_200: countIf(s => Number(s.tot) > 200),
-            T_180: countIf(s => Number(s.tot) > 180),
-            T_150: countIf(s => Number(s.tot) > 150),
+            T_250: countIf(s => Number(s.tot) >= 250),
+            T_200: countIf(s => Number(s.tot) >= 200),
+            T_180: countIf(s => Number(s.tot) >= 180),
+            T_150: countIf(s => Number(s.tot) >= 150),
+            T_120: countIf(s => Number(s.tot) >= 120),
+            T_100: countIf(s => Number(s.tot) >= 100),
+            T_80: countIf(s => Number(s.tot) >= 80),
             Max_M: Math.max(...examStats.map(s => Number(s.Max_M) || 0)),
-            M_80: countIf(s => Number(s.mat) > 80),
+            M_80: countIf(s => Number(s.mat) >= 80),
+            M_70: countIf(s => Number(s.mat) >= 70),
             Max_P: Math.max(...examStats.map(s => Number(s.Max_P) || 0)),
-            P_80: countIf(s => Number(s.phy) > 80),
+            P_80: countIf(s => Number(s.phy) >= 80),
+            P_70: countIf(s => Number(s.phy) >= 70),
             Max_C: Math.max(...examStats.map(s => Number(s.Max_C) || 0)),
-            C_80: countIf(s => Number(s.che) > 80)
+            C_80: countIf(s => Number(s.che) >= 80),
+            C_70: countIf(s => Number(s.che) >= 70)
         };
     };
 
@@ -595,19 +598,22 @@ const AnalysisReport = ({ filters }) => {
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Test')} style={{ whiteSpace: 'nowrap' }}>Test Name <SortIcon config={statsSortConfig} columnKey="Test" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Attn')} style={{ color: 'var(--accent)' }}>Attn <SortIcon config={statsSortConfig} columnKey="Attn" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Max_T')}>Max_T <SortIcon config={statsSortConfig} columnKey="Max_T" /></th>
-                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_280')}>T&gt;280 <SortIcon config={statsSortConfig} columnKey="T_280" /></th>
-                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_260')}>T&gt;260 <SortIcon config={statsSortConfig} columnKey="T_260" /></th>
-                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_240')}>T&gt;240 <SortIcon config={statsSortConfig} columnKey="T_240" /></th>
-                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_220')}>T&gt;220 <SortIcon config={statsSortConfig} columnKey="T_220" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_250')}>T&gt;250 <SortIcon config={statsSortConfig} columnKey="T_250" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'T_200')}>T&gt;200 <SortIcon config={statsSortConfig} columnKey="T_200" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'T_180')}>T&gt;180 <SortIcon config={statsSortConfig} columnKey="T_180" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'T_150')}>T&gt;150 <SortIcon config={statsSortConfig} columnKey="T_150" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_120')}>T&gt;120 <SortIcon config={statsSortConfig} columnKey="T_120" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_100')}>T&gt;100 <SortIcon config={statsSortConfig} columnKey="T_100" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'T_80')}>T&gt;80 <SortIcon config={statsSortConfig} columnKey="T_80" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Max_M')}>Max_M <SortIcon config={statsSortConfig} columnKey="Max_M" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'M_80')}>M&gt;80 <SortIcon config={statsSortConfig} columnKey="M_80" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'M_70')}>M&gt;70 <SortIcon config={statsSortConfig} columnKey="M_70" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Max_P')}>Max_P <SortIcon config={statsSortConfig} columnKey="Max_P" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'P_80')}>P&gt;80 <SortIcon config={statsSortConfig} columnKey="P_80" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'P_70')}>P&gt;70 <SortIcon config={statsSortConfig} columnKey="P_70" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'Max_C')}>Max_C <SortIcon config={statsSortConfig} columnKey="Max_C" /></th>
                                         <th onClick={() => requestSort(setStatsSortConfig, 'C_80')}>C&gt;80 <SortIcon config={statsSortConfig} columnKey="C_80" /></th>
+                                        <th onClick={() => requestSort(setStatsSortConfig, 'C_70')}>C&gt;70 <SortIcon config={statsSortConfig} columnKey="C_70" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -620,19 +626,22 @@ const AnalysisReport = ({ filters }) => {
                                                 <td className="text-left" style={{ whiteSpace: 'nowrap' }}>{row.Test}</td>
                                                 <td style={{ fontWeight: '700' }}>{row.Attn}</td>
                                                 <td>{row.Max_T}</td>
-                                                <td>{row.T_280}</td>
-                                                <td>{row.T_260}</td>
-                                                <td>{row.T_240}</td>
-                                                <td>{row.T_220}</td>
+                                                <td>{row.T_250}</td>
                                                 <td>{row.T_200}</td>
                                                 <td>{row.T_180}</td>
                                                 <td>{row.T_150}</td>
+                                                <td>{row.T_120}</td>
+                                                <td>{row.T_100}</td>
+                                                <td>{row.T_80}</td>
                                                 <td>{row.Max_M}</td>
                                                 <td>{row.M_80}</td>
+                                                <td>{row.M_70}</td>
                                                 <td>{row.Max_P}</td>
                                                 <td>{row.P_80}</td>
+                                                <td>{row.P_70}</td>
                                                 <td>{row.Max_C}</td>
                                                 <td>{row.C_80}</td>
+                                                <td>{row.C_70}</td>
                                             </tr>
                                         ))
                                     )}
@@ -641,19 +650,22 @@ const AnalysisReport = ({ filters }) => {
                                             <td colSpan="2" className="text-left">Average Count</td>
                                             <td style={{ fontWeight: '700' }}>{statsSummary.Attn}</td>
                                             <td>{statsSummary.Max_T}</td>
-                                            <td>{statsSummary.T_280}</td>
-                                            <td>{statsSummary.T_260}</td>
-                                            <td>{statsSummary.T_240}</td>
-                                            <td>{statsSummary.T_220}</td>
+                                            <td>{statsSummary.T_250}</td>
                                             <td>{statsSummary.T_200}</td>
                                             <td>{statsSummary.T_180}</td>
                                             <td>{statsSummary.T_150}</td>
+                                            <td>{statsSummary.T_120}</td>
+                                            <td>{statsSummary.T_100}</td>
+                                            <td>{statsSummary.T_80}</td>
                                             <td>{statsSummary.Max_M}</td>
                                             <td>{statsSummary.M_80}</td>
+                                            <td>{statsSummary.M_70}</td>
                                             <td>{statsSummary.Max_P}</td>
                                             <td>{statsSummary.P_80}</td>
+                                            <td>{statsSummary.P_70}</td>
                                             <td>{statsSummary.Max_C}</td>
                                             <td>{statsSummary.C_80}</td>
+                                            <td>{statsSummary.C_70}</td>
                                         </tr>
                                     )}
                                 </tbody>
