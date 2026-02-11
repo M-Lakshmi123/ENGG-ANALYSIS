@@ -180,6 +180,17 @@ app.get('/api/filters', async (req, res) => {
     }
 });
 
+// Debug Row Count
+app.get('/api/debug-count', async (req, res) => {
+    try {
+        const pool = await connectToDb();
+        const result = await pool.request().query('SELECT COUNT(*) as count FROM ENGG_RESULT');
+        res.json(result.recordset[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Health Check
 app.get('/api/health', async (req, res) => {
     try {
