@@ -30,7 +30,6 @@ services:
   - type: web
     name: engg-frontend
     env: static
-    region: singapore
     plan: free
     rootDir: client
     buildCommand: npm install && npm run build
