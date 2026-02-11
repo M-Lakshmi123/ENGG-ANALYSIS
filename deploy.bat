@@ -1,6 +1,7 @@
 @echo off
+title Deploy Engineering Analysis
 set /p msg="Enter commit message: "
-if "%msg%"=="" set msg="Fixed PDF layout and logic"
+if "%msg%"=="" set msg="Update Engineering Analysis"
 
 echo.
 echo === Adding files ===
@@ -12,13 +13,15 @@ git commit -m "%msg%"
 
 echo.
 echo === Pushing to GitHub ===
-git push origin master
+:: Using 'main' as it is the default for this project
+git push origin main
 
 echo.
-echo === Triggering Render Deployment ===
-curl -X POST "https://api.render.com/deploy/srv-d5u3r3nfte5s7390fou0?key=a_9tubU-WcI"
+echo === Triggering Render Backend Deployment ===
+:: Updated with new sync hook
+curl -X POST "https://api.render.com/sync/exs-d6669drh46gs73ahgih0?key=TnaxQGSV1tE"
 
 echo.
 echo.
-echo === Success! Deployment started on Render. ===
+echo === Success! Changes pushed and Render deployment triggered. ===
 pause
