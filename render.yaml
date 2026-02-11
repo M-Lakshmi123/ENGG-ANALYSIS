@@ -18,7 +18,7 @@ services:
       - key: DB_PASSWORD
         sync: false
       - key: DB_NAME
-        value: NEET  # Update this if using a different DB name later
+        value: test
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASS
