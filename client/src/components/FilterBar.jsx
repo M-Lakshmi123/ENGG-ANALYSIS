@@ -401,37 +401,37 @@ const FilterBar = ({ filters, setFilters, restrictedCampus, apiEndpoints = {} })
                     />
                 </div>
 
-                {/* Stream Select */}
+                {/* Stream Select (Engineering calls it Batch) */}
                 <div className={`filter-group ${loadingFilters || (!isRestricted && filters.campus.length === 0) ? 'disabled-logic' : ''}`}>
-                    <label>Stream</label>
+                    <label>Batch</label>
                     <Select
                         isMulti
                         name="stream"
-                        options={withSelectAll(options.streams, "Streams")}
+                        options={withSelectAll(options.streams, "Batch")}
                         value={getValue('stream')}
                         onChange={(opts, meta) => handleSelectChange('stream', opts, meta)}
                         className="react-select-container"
                         isLoading={loadingFilters}
                         classNamePrefix="react-select"
-                        placeholder="Select Stream..."
+                        placeholder="Select Batch..."
                         styles={customStyles}
                         isDisabled={loadingFilters || (!isRestricted && filters.campus.length === 0)}
                     />
                 </div>
 
-                {/* Test Type Select */}
+                {/* Test Type Select (Engineering calls it Year) */}
                 <div className={`filter-group ${loadingFilters || filters.stream.length === 0 ? 'disabled-logic' : ''}`}>
-                    <label>Test Type</label>
+                    <label>Year</label>
                     <Select
                         isMulti
                         name="testType"
-                        options={withSelectAll(options.testTypes, "Types")}
+                        options={withSelectAll(options.testTypes, "Years")}
                         value={getValue('testType')}
                         onChange={(opts, meta) => handleSelectChange('testType', opts, meta)}
                         className="react-select-container"
                         isLoading={loadingFilters}
                         classNamePrefix="react-select"
-                        placeholder="Select Test Type..."
+                        placeholder="Select Year..."
                         styles={customStyles}
                         isDisabled={loadingFilters || filters.stream.length === 0}
                     />
@@ -455,19 +455,19 @@ const FilterBar = ({ filters, setFilters, restrictedCampus, apiEndpoints = {} })
                     />
                 </div>
 
-                {/* Top_ALL Select */}
+                {/* Top_ALL Select (Engineering calls it Top_AIR) */}
                 <div className={`filter-group ${loadingFilters || filters.test.length === 0 ? 'disabled-logic' : ''}`}>
-                    <label>Top_ALL</label>
+                    <label>Top_AIR</label>
                     <Select
                         isMulti
                         name="topAll"
-                        options={withSelectAll(options.topAll || [], "Top_ALL")}
+                        options={withSelectAll(options.topAll || [], "Top_AIR")}
                         value={getValue('topAll')}
                         onChange={(opts, meta) => handleSelectChange('topAll', opts, meta)}
                         className="react-select-container"
                         isLoading={loadingFilters}
                         classNamePrefix="react-select"
-                        placeholder="Select Top_ALL..."
+                        placeholder="Select Top_AIR..."
                         styles={customStyles}
                         isDisabled={loadingFilters || filters.test.length === 0}
                     />
