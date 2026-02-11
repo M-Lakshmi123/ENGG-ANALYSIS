@@ -90,11 +90,11 @@ async function processFile(filePath) {
                         C_Rank INT,
                         Batch VARCHAR(255),
                         Year VARCHAR(50),
-                        Top_ALL VARCHAR(50),
+                        Top_AIR VARCHAR(50),
                         P1_P2 VARCHAR(50),
-                        Best_of_three VARCHAR(50),
-                        Below_1000_Target VARCHAR(50),
-                        Jee_Mains_Target VARCHAR(50)
+                        Best_of VARCHAR(50),
+                        Below_100k VARCHAR(50),
+                        Jee_Mains_AIR VARCHAR(50)
                     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
                 `;
                 await pool.request().query(createTableSql);
@@ -189,12 +189,23 @@ async function uploadToDB(rows, tableName, filename) {
                 const testIndex = findKeyIndex('TEST');
                 // No Q_No in Medical Result usually, just Test based
 
+                // --- DATA CLEANING & FORMATTING ---
                 const values = Object.values(row).map((v, index) => {
                     const key = keys[index];
+                    const upperKey = key.toUpperCase().trim();
                     if (v === null || v === undefined) return "NULL";
                     let s = String(v).trim();
-                    const upperKey = key.toUpperCase().trim();
 
+                    // 1. Handle Numeric Columns (Prevent "Incorrect value" errors)
+                    const numericColumns = ['TOTAL', 'TOTAL_PER', 'AIR', 'MAT', 'MAT_PER', 'M_RANK', 'PHY', 'PHY_PER', 'P_RANK', 'CHE', 'CHE_PER', 'C_RANK'];
+                    if (numericColumns.includes(upperKey)) {
+                        // If value is not a valid number (e.g., '?', '-', 'Nil', ''), set to NULL
+                        if (s === '' || isNaN(Number(s)) || s === '?') {
+                            return "NULL";
+                        }
+                    }
+
+                    // 2. Format STUD_ID (Remove scientific notation)
                     if (upperKey === 'STUD_ID') {
                         if (/[eE][+-]?\d+$/.test(s) || /^\d+\.\d+$/.test(s)) {
                             try {
@@ -203,33 +214,32 @@ async function uploadToDB(rows, tableName, filename) {
                             } catch (e) { }
                         }
                     }
+
+                    // 3. Format DATE (TiDB/MySQL requires YYYY-MM-DD)
                     if (upperKey === 'DATE' || upperKey === 'EXAM_DATE') {
+                        let dateObj = null;
                         // Case A: Excel Serial Number (e.g. 45831)
                         if (/^\d{5}(\.\d+)?$/.test(s)) {
                             try {
                                 const serial = parseFloat(s);
-                                // Excel base date: Dec 30, 1899
-                                const date = new Date(Math.round((serial - 25569) * 86400 * 1000));
-                                const d = date.getDate();
-                                const m = date.getMonth() + 1;
-                                const y = date.getFullYear();
-                                s = `${String(d).padStart(2, '0')}-${String(m).padStart(2, '0')}-${y}`;
-                            } catch (e) { console.error("Date Parse Error:", e); }
+                                dateObj = new Date(Math.round((serial - 25569) * 86400 * 1000));
+                            } catch (e) { }
                         }
-                        // Case B: Slash Separated (DD/MM/YYYY)
-                        else if (s.includes('/')) {
-                            const parts = s.split('/');
+                        // Case B: DD/MM/YYYY or DD-MM-YYYY
+                        else if (s.includes('/') || s.includes('-')) {
+                            const sep = s.includes('/') ? '/' : '-';
+                            const parts = s.split(sep);
                             if (parts.length === 3) {
-                                // Assuming DD/MM/YYYY
-                                s = `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
+                                // Assuming DD is parts[0], MM is parts[1], YYYY is parts[2]
+                                dateObj = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
                             }
                         }
-                        // Case C: Hyphen Separated (DD-MM-YYYY) - already correct usually, but ensure padding
-                        else if (s.includes('-')) {
-                            const parts = s.split('-');
-                            if (parts.length === 3) {
-                                s = `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
-                            }
+
+                        if (dateObj && !isNaN(dateObj.getTime())) {
+                            const y = dateObj.getFullYear();
+                            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+                            const d = String(dateObj.getDate()).padStart(2, '0');
+                            s = `${y}-${m}-${d}`;
                         }
                     }
 
