@@ -18,7 +18,7 @@ services:
       - key: DB_PASSWORD
         sync: false
       - key: DB_NAME
-        value: test
+        value: ENGG
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASS
