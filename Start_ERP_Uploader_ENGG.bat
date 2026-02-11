@@ -1,11 +1,11 @@
 @echo off
-title NEET Medical Result Uploader
+title ENGG ERP Uploader
 
-:: Change to the correct project directory
-cd /d "f:\Projects\NEET Analysis"
+:: Change to the current project directory using relative path
+cd /d "%~dp0"
 
-echo Starting Medical Result Auto-Uploader...
-echo Watching: F:\Project files\MEDICAL_RESULT.csv
+echo Starting Engineering ERP Auto-Uploader...
+echo Watching: F:\Project files (Error report.csv)
 echo.
 
 echo ------------------------------------------------------------
@@ -23,14 +23,14 @@ echo ------------------------------------------------------------
 echo.
 
 :: Run the script
-if exist "server\auto_upload_medical.js" (
-    node server/auto_upload_medical.js
+if exist "server\auto_upload_erp.js" (
+    node server/auto_upload_erp.js
 ) else (
     echo.
     echo ---------------------------------------------------------------------
-    echo ERROR: 'server\auto_upload_medical.js' not found!
+    echo ERROR: 'server\auto_upload_erp.js' not found!
     echo Current Directory is: %CD%
-    echo Expected to find the script at: f:\Projects\NEET Analysis\server\auto_upload_medical.js
+    echo Expected to find the script at: %CD%\server\auto_upload_erp.js
     echo ---------------------------------------------------------------------
     echo.
 )
