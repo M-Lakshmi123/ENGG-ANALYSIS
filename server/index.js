@@ -185,7 +185,12 @@ app.get('/api/health', async (req, res) => {
     try {
         const pool = await connectToDb();
         await pool.request().query('SELECT 1');
-        res.json({ status: 'ok', message: 'Database connected' });
+        res.json({
+            status: 'ok',
+            message: 'Database connected',
+            version: '1.0.2 - Filter Mapping Fixed',
+            timestamp: '2026-02-11 17:35'
+        });
     } catch (err) {
         res.status(500).json({ status: 'error', message: err.message });
     }
