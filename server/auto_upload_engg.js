@@ -8,7 +8,7 @@ const CHECKPOINT_FILE = path.join(__dirname, 'upload_checkpoint_engg.json');
 // --- CONFIGURATION ---
 const WATCH_FOLDER = 'F:/Project files';
 // STRICTLY WATCH ONLY ENGINEERING RESULTS
-const FILES_TO_WATCH = ['ENGG_RESULT.csv', 'Engg Result.csv', 'Engineering Result.csv'];
+const FILES_TO_WATCH = ['ENGG_RESULT.csv'];
 const WATCH_PATHS = FILES_TO_WATCH.map(f => path.join(WATCH_FOLDER, f));
 
 console.log("-----------------------------------------");
@@ -42,15 +42,14 @@ async function processFile(filePath) {
     const filename = require('path').basename(filePath);
 
     // STRICTLY ENGG RESULT
-    let tableName = 'ENGG_RESULT';
+    let tableName = '';
     const upperName = filename.toUpperCase();
 
-    // Just to be safe, though pattern matching above handles it
-    if (upperName.includes('ENGG') || upperName.includes('ENGINEERING')) {
+    if (upperName === 'ENGG_RESULT.CSV') {
         tableName = 'ENGG_RESULT';
     } else {
         // Fallback or ignore
-        console.log(`Skipping unknown file: ${filename}`);
+        console.log(`Skipping unknown or incorrect file: ${filename}`);
         isProcessing = false;
         return;
     }
@@ -90,11 +89,11 @@ async function processFile(filePath) {
                         C_Rank INT,
                         Batch VARCHAR(255),
                         Year VARCHAR(50),
-                        Top_AIR VARCHAR(50),
+                        Top_ALL VARCHAR(50),
                         P1_P2 VARCHAR(50),
-                        Best_of VARCHAR(50),
-                        Below_100k VARCHAR(50),
-                        Jee_Mains_AIR VARCHAR(50)
+                        Best_of_three VARCHAR(50),
+                        Below_1000_Target VARCHAR(50),
+                        Jee_Mains_Target VARCHAR(50)
                     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
                 `;
                 await pool.request().query(createTableSql);

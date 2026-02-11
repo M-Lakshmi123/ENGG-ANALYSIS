@@ -28,11 +28,11 @@ async function resetTable() {
                 C_Rank INT,
                 Batch VARCHAR(255),
                 Year VARCHAR(50),
-                Top_AIR VARCHAR(50),
+                Top_ALL VARCHAR(50),
                 P1_P2 VARCHAR(50),
-                Best_of VARCHAR(50),
-                Below_100k VARCHAR(50),
-                Jee_Mains_AIR VARCHAR(50)
+                Best_of_three VARCHAR(50),
+                Below_1000_Target VARCHAR(50),
+                Jee_Mains_Target VARCHAR(50)
             ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
         `;
         await pool.request().query(createTableSql);

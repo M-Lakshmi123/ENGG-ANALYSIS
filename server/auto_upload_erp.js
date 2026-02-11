@@ -42,14 +42,14 @@ async function processFile(filePath) {
     const filename = require('path').basename(filePath);
 
     // STRICTLY ERP REPORT
-    let tableName = 'ERP_REPORT_ENGG';
+    let tableName = '';
     const upperName = filename.toUpperCase();
 
-    if (upperName.includes('Error report') || upperName.includes('ERROR REPORT') || upperName.includes('ERP_REPORT')) {
+    if (upperName === 'ERROR REPORT.CSV') {
         tableName = 'ERP_REPORT_ENGG';
     } else {
         // Fallback or ignore
-        console.log(`Skipping unknown file: ${filename}`);
+        console.log(`Skipping unknown or incorrect file: ${filename}`);
         isProcessing = false;
         return;
     }
@@ -98,9 +98,17 @@ async function processFile(filePath) {
                         Sources VARCHAR(255),
                         Original_Replica VARCHAR(255),
                         Level VARCHAR(50),
+                        Batch VARCHAR(255),
                         Year VARCHAR(50),
-                        Top_ALL VARCHAR(50),
-                        P1_P2 VARCHAR(50)
+                        Top_AIR VARCHAR(50),
+                        P1_P2 VARCHAR(50),
+                        Tot_720 VARCHAR(50),
+                        T_100 VARCHAR(50),
+                        T_200 VARCHAR(50),
+                        T_300 VARCHAR(50),
+                        T_400 VARCHAR(50),
+                        T_500 VARCHAR(50),
+                        T_600 VARCHAR(50)
                     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
                 `;
                 await pool.request().query(createTableSql);

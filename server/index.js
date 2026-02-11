@@ -75,8 +75,8 @@ const buildWhereClause = (req, options = {}) => {
     if (!options.ignoreTest) addClause('Test', test);
     // Engineering: testType maps to P1_P2
     if (!options.ignoreTestType) addClause('P1_P2', testType);
-    // Engineering: topAll is Top_AIR
-    if (!options.ignoreTopAll) addClause('Top_AIR', topAll);
+    // Engineering: topAll is Top_ALL
+    if (!options.ignoreTopAll) addClause('Top_ALL', topAll);
 
     // If specific student IDs are selected, use them exclusively
     const sSearch = Array.isArray(studentSearch) ? studentSearch : (studentSearch ? [studentSearch] : []);
@@ -142,7 +142,7 @@ app.get('/api/filters', async (req, res) => {
         let topClauses = [...tClauses];
         if (testClause) topClauses.push(testClause);
         const topWhere = topClauses.length > 0 ? `WHERE ${topClauses.join(' AND ')}` : 'WHERE 1=1';
-        const topQuery = `SELECT DISTINCT TRIM(Top_AIR) as Top_ALL FROM ENGG_RESULT ${topWhere} AND Top_AIR IS NOT NULL AND Top_AIR != '' ORDER BY Top_AIR`;
+        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Top_ALL FROM ENGG_RESULT ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Top_ALL`;
 
         const cacheKey = `filters_${JSON.stringify(req.query)}`;
         const cachedData = cache.get(cacheKey);
