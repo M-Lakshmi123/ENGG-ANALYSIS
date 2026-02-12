@@ -118,31 +118,31 @@ app.get('/api/filters', async (req, res) => {
             return `${column} IN (${list})`;
         };
 
-        const campusClause = buildOptionClause('CAMPUS_NAME', campus);
-        const streamClause = buildOptionClause('Batch', stream);
-        const testTypeClause = buildOptionClause('P1_P2', testType);
-        const testClause = buildOptionClause('Test', test);
+        const campusClause = buildOptionClause('UPPER(TRIM(CAMPUS_NAME))', campus);
+        const streamClause = buildOptionClause('UPPER(TRIM(Batch))', stream);
+        const testTypeClause = buildOptionClause('UPPER(TRIM(P1_P2))', testType);
+        const testClause = buildOptionClause('UPPER(TRIM(Test))', test);
 
-        const campusesQuery = 'SELECT DISTINCT TRIM(CAMPUS_NAME) as CAMPUS_NAME FROM ENGG_RESULT WHERE CAMPUS_NAME IS NOT NULL AND CAMPUS_NAME != \'\' ORDER BY CAMPUS_NAME';
+        const campusesQuery = 'SELECT DISTINCT TRIM(CAMPUS_NAME) as Result FROM ENGG_RESULT WHERE CAMPUS_NAME IS NOT NULL AND CAMPUS_NAME != \'\' ORDER BY Result';
 
         const sWhere = campusClause ? `WHERE ${campusClause}` : 'WHERE 1=1';
-        const streamsQuery = `SELECT DISTINCT TRIM(Batch) as Stream FROM ENGG_RESULT ${sWhere} AND Batch IS NOT NULL AND Batch != '' ORDER BY Batch`;
+        const streamsQuery = `SELECT DISTINCT TRIM(Batch) as Result FROM ENGG_RESULT ${sWhere} AND Batch IS NOT NULL AND Batch != '' ORDER BY Result`;
 
         let ttClauses = [];
         if (campusClause) ttClauses.push(campusClause);
         if (streamClause) ttClauses.push(streamClause);
         const ttWhere = ttClauses.length > 0 ? `WHERE ${ttClauses.join(' AND ')}` : 'WHERE 1=1';
-        const testTypesQuery = `SELECT DISTINCT TRIM(P1_P2) as Test_Type FROM ENGG_RESULT ${ttWhere} AND P1_P2 IS NOT NULL AND P1_P2 != '' ORDER BY P1_P2`;
+        const testTypesQuery = `SELECT DISTINCT TRIM(P1_P2) as Result FROM ENGG_RESULT ${ttWhere} AND P1_P2 IS NOT NULL AND P1_P2 != '' ORDER BY Result`;
 
         let tClauses = [...ttClauses];
         if (testTypeClause) tClauses.push(testTypeClause);
         const tWhere = tClauses.length > 0 ? `WHERE ${tClauses.join(' AND ')}` : 'WHERE 1=1';
-        const testsQuery = `SELECT DISTINCT TRIM(Test) as Test FROM ENGG_RESULT ${tWhere} AND Test IS NOT NULL AND Test != '' ORDER BY Test`;
+        const testsQuery = `SELECT DISTINCT TRIM(Test) as Result FROM ENGG_RESULT ${tWhere} AND Test IS NOT NULL AND Test != '' ORDER BY Result`;
 
         let topClauses = [...tClauses];
         if (testClause) topClauses.push(testClause);
         const topWhere = topClauses.length > 0 ? `WHERE ${topClauses.join(' AND ')}` : 'WHERE 1=1';
-        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Top_ALL FROM ENGG_RESULT ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Top_ALL`;
+        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Result FROM ENGG_RESULT ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Result`;
 
         const cacheKey = `filters_${JSON.stringify(req.query)}`;
         const cachedData = cache.get(cacheKey);
@@ -162,17 +162,17 @@ app.get('/api/filters', async (req, res) => {
         ]);
 
         const responseData = {
-            campuses: (campusesRes.recordset || []).map(r => r.CAMPUS_NAME).filter(Boolean),
-            streams: (streamsRes.recordset || []).map(r => r.Stream).filter(Boolean),
-            testTypes: (testTypesRes.recordset || []).map(r => r.Test_Type).filter(Boolean),
-            tests: (testsRes.recordset || []).map(r => r.Test).filter(Boolean),
-            topAll: (topRes.recordset || []).map(r => r.Top_ALL).filter(Boolean)
+            campuses: (campusesRes.recordset || []).map(r => r.Result).filter(Boolean),
+            streams: (streamsRes.recordset || []).map(r => r.Result).filter(Boolean),
+            testTypes: (testTypesRes.recordset || []).map(r => r.Result).filter(Boolean),
+            tests: (testsRes.recordset || []).map(r => r.Result).filter(Boolean),
+            topAll: (topRes.recordset || []).map(r => r.Result).filter(Boolean)
         };
 
         console.log(`[Filters] Success (${Date.now() - start}ms): ${responseData.campuses.length} campuses, ${responseData.streams.length} streams`);
 
-        // Cache for only 10 seconds to allow quick updates during data upload
-        cache.set(cacheKey, responseData, 10);
+        // Cache Disabled for debug
+        // cache.set(cacheKey, responseData, 60);
         res.json(responseData);
     } catch (err) {
         console.error("[Filters] CRITICAL ERROR:", err);
@@ -514,31 +514,31 @@ app.get('/api/erp/filters', async (req, res) => {
         };
 
         // Note: Frontend sends 'branch' (mapped to campus filter), we query 'Branch' column
-        const branchClause = buildOptionClause('Branch', branch);
-        const streamClause = buildOptionClause('Stream', stream);
-        const testTypeClause = buildOptionClause('Test_Type', testType);
-        const testClause = buildOptionClause('Test', test);
+        const branchClause = buildOptionClause('UPPER(TRIM(Branch))', branch);
+        const streamClause = buildOptionClause('UPPER(TRIM(Stream))', stream);
+        const testTypeClause = buildOptionClause('UPPER(TRIM(Test_Type))', testType);
+        const testClause = buildOptionClause('UPPER(TRIM(Test))', test);
 
-        const branchesQuery = 'SELECT DISTINCT TRIM(Branch) as Branch FROM ERP_REPORT_ENGG WHERE Branch IS NOT NULL AND Branch != \'\' ORDER BY Branch';
+        const branchesQuery = 'SELECT DISTINCT TRIM(Branch) as Result FROM ERP_REPORT_ENGG WHERE Branch IS NOT NULL AND Branch != \'\' ORDER BY Result';
 
         const sWhere = branchClause ? `WHERE ${branchClause}` : 'WHERE 1=1';
-        const streamsQuery = `SELECT DISTINCT TRIM(Stream) as Stream FROM ERP_REPORT_ENGG ${sWhere} AND Stream IS NOT NULL AND Stream != '' ORDER BY Stream`;
+        const streamsQuery = `SELECT DISTINCT TRIM(Stream) as Result FROM ERP_REPORT_ENGG ${sWhere} AND Stream IS NOT NULL AND Stream != '' ORDER BY Result`;
 
         let ttClauses = [];
         if (branchClause) ttClauses.push(branchClause);
         if (streamClause) ttClauses.push(streamClause);
         const ttWhere = ttClauses.length > 0 ? `WHERE ${ttClauses.join(' AND ')}` : 'WHERE 1=1';
-        const testTypesQuery = `SELECT DISTINCT TRIM(Test_Type) as Test_Type FROM ERP_REPORT_ENGG ${ttWhere} AND Test_Type IS NOT NULL AND Test_Type != '' ORDER BY Test_Type`;
+        const testTypesQuery = `SELECT DISTINCT TRIM(Test_Type) as Result FROM ERP_REPORT_ENGG ${ttWhere} AND Test_Type IS NOT NULL AND Test_Type != '' ORDER BY Result`;
 
         let tClauses = [...ttClauses];
         if (testTypeClause) tClauses.push(testTypeClause);
         const tWhere = tClauses.length > 0 ? `WHERE ${tClauses.join(' AND ')}` : 'WHERE 1=1';
-        const testsQuery = `SELECT DISTINCT TRIM(Test) as Test FROM ERP_REPORT_ENGG ${tWhere} AND Test IS NOT NULL AND Test != '' ORDER BY Test`;
+        const testsQuery = `SELECT DISTINCT TRIM(Test) as Result FROM ERP_REPORT_ENGG ${tWhere} AND Test IS NOT NULL AND Test != '' ORDER BY Result`;
 
         let topClauses = [...tClauses];
         if (testClause) topClauses.push(testClause);
         const topWhere = topClauses.length > 0 ? `WHERE ${topClauses.join(' AND ')}` : 'WHERE 1=1';
-        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Top_ALL FROM ERP_REPORT_ENGG ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Top_ALL`;
+        const topQuery = `SELECT DISTINCT TRIM(Top_ALL) as Result FROM ERP_REPORT_ENGG ${topWhere} AND Top_ALL IS NOT NULL AND Top_ALL != '' ORDER BY Result`;
 
         const [branchesRes, streamsRes, testTypesRes, testsRes, topRes] = await Promise.all([
             pool.request().query(branchesQuery),
@@ -549,11 +549,11 @@ app.get('/api/erp/filters', async (req, res) => {
         ]);
 
         res.json({
-            campuses: (branchesRes.recordset || []).map(r => r.Branch).filter(Boolean),
-            streams: (streamsRes.recordset || []).map(r => r.Stream).filter(Boolean),
-            testTypes: (testTypesRes.recordset || []).map(r => r.Test_Type).filter(Boolean),
-            tests: (testsRes.recordset || []).map(r => r.Test).filter(Boolean),
-            topAll: (topRes.recordset || []).map(r => r.Top_ALL).filter(Boolean)
+            campuses: (branchesRes.recordset || []).map(r => r.Result).filter(Boolean),
+            streams: (streamsRes.recordset || []).map(r => r.Result).filter(Boolean),
+            testTypes: (testTypesRes.recordset || []).map(r => r.Result).filter(Boolean),
+            tests: (testsRes.recordset || []).map(r => r.Result).filter(Boolean),
+            topAll: (topRes.recordset || []).map(r => r.Result).filter(Boolean)
         });
     } catch (err) {
         console.error("[ERP Filters] ERROR:", err);

@@ -293,7 +293,7 @@ const AdminDashboard = () => {
                             <div className="sidebar-title">
                                 <FilterIcon size={16} /> Filters
                             </div>
-                            <FilterBar onFilterChange={setFilters} />
+                            <FilterBar filters={filters} setFilters={setFilters} />
                         </div>
                         <div className="analytics-content">
                             <div className="reports-container">
